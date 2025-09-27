@@ -1,0 +1,55 @@
+{
+  "timestamp": "2025-09-26T15:53:03.679628",
+  "total_files": 1,
+  "success_count": 1,
+  "complex_entry_count": 1,
+  "simple_entry_count": 0,
+  "results": [
+    {
+      "file_name": "invoice_sample.pdf",
+      "file_path": "data/invoice_sample.pdf",
+      "file_size": 154630,
+      "processing_status": "success",
+      "final_confidence": 0.965,
+      "needs_review": false,
+      "processing_time": 32.064440965652466,
+      "error_message": null,
+      "journal_entry": {
+        "business_description": "深圳市纳维科技有限公司向济南图克自动驾驶研发中心销售50台开发板，收到含税货款11900元，适用1%征收率，形成销售收入。",
+        "entry_date": "2025-09-26",
+        "voucher_number": null,
+        "entry_lines": [
+          {
+            "account_code": "1002",
+            "account_name": "银行存款",
+            "direction": "借",
+            "amount": 11900.0,
+            "description": "收到客户银行转账货款"
+          },
+          {
+            "account_code": "6001",
+            "account_name": "主营业务收入",
+            "direction": "贷",
+            "amount": 11782.18,
+            "description": "确认不含税销售收入"
+          },
+          {
+            "account_code": "2221",
+            "account_name": "应交税费",
+            "direction": "贷",
+            "amount": 117.82,
+            "description": "计提应交增值税（销项税额，1%征收率）"
+          }
+        ],
+        "total_debit": 11900.0,
+        "total_credit": 11900.0,
+        "entry_type": "复合分录",
+        "confidence_score": 0.95,
+        "is_balanced": true,
+        "validation_notes": "验证通过",
+        "analysis_process": "本业务为现销业务，客户已支付含税货款11900元，适用1%征收率。根据含税价计算不含税收入：11900 ÷ (1 + 1%) = 11782.18元；增值税税额 = 11900 - 11782.18 = 117.82元。根据规则A02（银行收到销售货款），应借记银行存款11900元，贷记主营业务收入11782.18元，贷记应交税费-应交增值税（销项税额）117.82元。该处理符合含税销售的复合分录原则。",
+        "applied_rules": "规则A02: 银行收到销售货款；复合分录处理原则第1条"
+      }
+    }
+  ]
+}

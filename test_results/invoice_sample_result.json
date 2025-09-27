@@ -1,0 +1,25 @@
+{
+  "file_info": {
+    "file_name": "invoice_sample.pdf",
+    "file_path": "data/invoice_sample.pdf",
+    "file_size": 154630,
+    "page_count": 1
+  },
+  "raw_text": "=== 第1页 ===\n电子发票（普通发票）\n发票号码：25952000000191884641\n开票日期：2025年09月15日\n购 名称：济南图克自动驾驶研发中心（有限合伙） 销 名称：深圳市纳维科技有限公司\n买 售\n方 方\n信 统一社会信用代码/纳税人识别号：91370103MACGG4QN53 信 统一社会信用代码/纳税人识别号：91440300MA5ELE239Y\n息 息\n项目名称 规格型号 单 位 数 量 单 价 金 额 税率/征收率 税 额\n*电子元件*开发板 台 50 235.643564356436 11782.18 1% 117.82\n合 计 ¥11782.18 ¥117.82\n价税合计（大写） 壹万壹仟玖佰圆整 （小写）¥11900.00\n购买方地址:-; 电话:-;\n购方开户银行:-; 银行账号:-;\n备\n注\n开票人：苗兆福\n苗兆福",
+  "extracted_info": {
+    "document_type": "采购发票",
+    "invoice_number": "25952000000191884641",
+    "invoice_date": "2025-09-15",
+    "seller_name": "深圳市纳维科技有限公司",
+    "buyer_name": "济南图克自动驾驶研发中心（有限合伙）",
+    "amount_before_tax": 11782.18,
+    "tax_amount": 117.82,
+    "total_amount": 11900.0,
+    "goods_description": "*电子元件*开发板",
+    "business_analysis": "济南图克自动驾驶研发中心（有限合伙）向深圳市纳维科技有限公司采购了50台开发板，不含税金额为11782.18元，增值税税率为1%，税额117.82元，价税合计11900.00元。该笔业务属于采购支出。",
+    "confidence_score": 0.98
+  },
+  "processing_status": "success",
+  "confidence_score": 0.98,
+  "needs_review": false
+}
