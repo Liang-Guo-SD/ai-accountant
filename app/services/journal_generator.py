@@ -21,7 +21,7 @@ from langchain.schema.output_parser import OutputParserException
 from langchain.output_parsers import PydanticOutputParser
 from pydantic import BaseModel, Field
 
-from app.core.config import get_ai_config
+from app.core.config import get_ai_config, get_app_config
 from app.services.rag_service import AccountingRAGService
 from app.services.business_standardizer import BusinessStandardizerService
 from app.database import SessionLocal
@@ -42,6 +42,9 @@ class JournalGenerationService:
     def __init__(self):
         """初始化服务"""
         self.config = get_ai_config()
+        self.our_company_tax_id = get_app_config().our_company_tax_id
+        self.our_company_name = get_app_config().our_company_name
+        
         self.llm = ChatOpenAI(
             model=self.config.openai_model,
             temperature=self.config.openai_temperature,
@@ -172,7 +175,7 @@ class JournalGenerationService:
         system_prompt = self._build_simple_entry_prompt(context, accounts)
         
         user_message = f"""
-请为以下业务生成简单的会计分录（单借单贷）：
+你是一家名为 {self.our_company_name} 的公司的资深会计师。请为以下发票业务（发票的核心是确认债权或债务）生成简单的会计分录（单借单贷）：
 
 业务描述：{business_description}
 金额：{amount}
@@ -196,7 +199,7 @@ class JournalGenerationService:
         system_prompt = self._build_complex_entry_prompt(context, accounts)
         
         user_message = f"""
-请为以下业务生成复合会计分录（可能涉及多借多贷）：
+你是一家名为 {self.our_company_name} 的公司的资深会计师。请为以下业务生成复合会计分录（可能涉及多借多贷）：
 
 业务描述：{business_description}
 总金额：{amount}
@@ -324,6 +327,12 @@ class JournalGenerationService:
 - 负债增加记贷方，负债减少记借方
 - 收入增加记贷方，费用增加记借方
 - 有借必有贷，借贷必相等
+
+**核心处理原则：凭证隔离原则**
+- 你处理的业务信息来源于【发票】。
+- **仅凭一张采购发票，必须默认交易为【赊购】，贷方科目【必须】使用 '2202 应付账款'。**
+- **仅凭一张销售发票，必须默认交易为【赊销】，借方科目【必须】使用 '1122 应收账款'。**
+- **绝对禁止**在没有明确的银行流水信息时，使用 '1002 银行存款' 或 '1001 库存现金' 作为发票业务的对应科目。
 
 复合分录处理原则：
 1. 含税销售：

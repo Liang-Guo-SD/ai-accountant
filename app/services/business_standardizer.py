@@ -18,7 +18,7 @@ from langchain_community.chat_models import ChatOpenAI
 from langchain.output_parsers import PydanticOutputParser
 from pydantic import BaseModel, Field
 
-from app.core.config import get_ai_config
+from app.core.config import get_ai_config, get_app_config
 from app.schemas import ExtractedInvoiceInfo
 
 logger = logging.getLogger(__name__)
@@ -48,6 +48,8 @@ class BusinessStandardizerService:
     def __init__(self):
         """初始化服务"""
         self.config = get_ai_config()
+        app_config = get_app_config()
+        self.our_company_name = app_config.our_company_name
         self.llm = ChatOpenAI(
             model=self.config.openai_model,
             temperature=0.1,  # 使用较低温度确保标准化的一致性
@@ -99,7 +101,20 @@ class BusinessStandardizerService:
         system_prompt = self._build_standardization_prompt()
         
         user_message = f"""
-请分析以下发票信息并生成标准化业务描述：
+你是一个专业的、严谨的AI注册会计师。
+
+**核心身份与立场:**
+1.  你正在为 **“{self.our_company_name}”** 这家公司工作。
+2.  你的所有分析和描述都【必须】站在 **“{self.our_company_name}”** 的视角。
+3.  分析发票时，首先要判断 **“{self.our_company_name}”** 是【买方】还是【卖方】。
+
+**核心处理原则：凭证隔离**
+1.  发票的核心是确认债权或债务。
+2.  如果 **“{self.our_company_name}”** 是【买方】，则该业务是【采购】，支付方式是【应付账款】。
+3.  如果 **“{self.our_company_name}”** 是【卖方】，则该业务是【销售】，支付方式是【应收账款】。
+4.  **绝对禁止**在只看到发票的情况下假设款项已支付。
+
+请严格遵循上述原则，分析以下发票信息并生成标准化业务描述：
 
 发票信息：
 {json.dumps(input_data, ensure_ascii=False, indent=2)}
@@ -146,6 +161,7 @@ class BusinessStandardizerService:
 
 标准化原则：
 - 使用标准会计术语
+- **凭证隔离原则：发票仅代表债权债务的确认，不代表资金收付。**
 - 突出关键业务要素：谁支付/收取、多少钱、什么业务
 - 明确资金流向：收款还是付款
 - 识别业务性质：销售、采购、费用支付等
@@ -160,7 +176,7 @@ class BusinessStandardizerService:
 支付方式分类：
 - "现金收付" - 现金交易
 - "银行转账" - 通过银行转账
-- "应收应付" - 赊销赊购，形成债权债务
+- "应收应付" - **默认的发票处理方式**。用于赊销赊购，形成债权债务。
 
 关键词提取要求：
 - 包含业务动作词：收到、支付、采购、销售等

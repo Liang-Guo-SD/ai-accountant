@@ -79,6 +79,10 @@ class AppConfig:
         self.debug = os.getenv("DEBUG", "true").lower() == "true"
         self.log_level = os.getenv("LOG_LEVEL", "INFO")
         
+        # 公司信息设置
+        self.our_company_name = os.getenv("OUR_COMPANY_NAME", "济南图克自动驾驶研发中心")
+        self.our_company_tax_id = os.getenv("OUR_COMPANY_TAX_ID", "91370103MACGG4QN53")
+
         # 文件处理配置
         self.max_file_size_mb = int(os.getenv("MAX_FILE_SIZE_MB", "10"))
         self.upload_dir = Path(os.getenv("UPLOAD_DIR", f"{PROJECT_ROOT}/data/uploads"))

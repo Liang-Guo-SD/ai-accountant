@@ -21,7 +21,7 @@ from langchain.schema.output_parser import OutputParserException
 from langchain.output_parsers import PydanticOutputParser
 from pydantic import BaseModel, Field
 
-from app.core.config import get_ai_config
+from app.core.config import get_ai_config, get_app_config
 from app.services.rag_service import AccountingRAGService
 from app.services.business_standardizer import BusinessStandardizerService
 from app.database import SessionLocal
@@ -62,6 +62,8 @@ class JournalGenerationService:
     def __init__(self):
         """初始化服务"""
         self.config = get_ai_config()
+        self.our_company_tax_id = get_app_config().our_company_tax_id
+        self.our_company_name = get_app_config().our_company_name
         self.llm = ChatOpenAI(
             model=self.config.openai_model,
             temperature=self.config.openai_temperature,
@@ -158,7 +160,7 @@ class JournalGenerationService:
         
         # 构建用户消息
         user_message = f"""
-请为以下业务生成会计分录：
+你是一家名为 {self.our_company_name} 的公司的资深会计师。请为以下业务生成会计分录：
 
 业务描述：{business_description}
 金额：{amount}
